@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+ "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+    <definition name="siteHeader" template="/WEB-INF/templates/headerOnly.jsp">
+        <put-attribute name="header" value="/WEB-INF/templates/header.jsp"/>
+        <put-attribute name="navigation" value="/WEB-INF/templates/navigation.jsp"/>
+    </definition>
+    
+    <definition name="siteFooter" template="/WEB-INF/templates/footerOnly.jsp">
+        <put-attribute name="footer" value="/WEB-INF/templates/footer.jsp"/>
+    </definition>
+    
+    <definition name=".mainTemplate" template="/WEB-INF/templates/main.jsp">
+        <put-attribute name="common-page-head" value="/WEB-INF/templates/common-page-head.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/templates/header.jsp"/>
+        <put-attribute name="navigation" value="/WEB-INF/templates/navigation.jsp"/>
+        <put-attribute name="body" >
+		    <definition name=".bodytemplate"  template="/WEB-INF/templates/bodytemplate.jsp"/>
+        </put-attribute>
+        <put-attribute name="footer" value="/WEB-INF/templates/footer.jsp"/>
+    </definition>
+
+    
+    
+    <definition name=".errorTemplate" template="/WEB-INF/templates/error.jsp">
+        <put-attribute name="common-page-head" value="/WEB-INF/templates/common-page-head.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/templates/header.jsp"/>
+        <put-attribute name="navigation" value="/WEB-INF/templates/navigation.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/templates/blank.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/templates/footer.jsp"/>
+    </definition>
+    
+   
+    <definition name="home" extends=".mainTemplate">
+        <put-attribute name="title" value="About Bank of America | Make Opportunity Possible"/>
+    </definition>
+    
+
+    <definition name="error-404" extends=".errorTemplate">
+        <put-attribute name="title" value="Bank of America | Page Not Found"/>
+        <put-attribute name="body" value="/WEB-INF/jsp/error-404.jsp"/>
+        <put-attribute name="additionalCSS" value="/css/error.css"/>
+    </definition>   
+
+    <definition name="error-500" extends=".errorTemplate">
+        <put-attribute name="title" value="Bank of America | Server Error"/>
+        <put-attribute name="body" value="/WEB-INF/jsp/error-500.jsp"/>
+        <put-attribute name="additionalCSS" value="/css/error.css"/>
+    </definition>   
+    
+ 
+    
+</tiles-definitions>
+

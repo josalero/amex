@@ -1,0 +1,20 @@
+<nt = 'http://www.jcp.org/jcr/nt/1.0'>
+<mix = 'http://www.jcp.org/jcr/mix/1.0'>
+
+<amex = 'http://www.amex.com/ns/repo'>
+
+[amex:ContentItem] > nt:file
+  - amex:CMS_ID (string)
+  - amex:Type (string)
+  - amex:Locale (string)
+  - amex:PublishedDate (date)
+  - amex:GeoTaxonomy (string) multiple
+  
+
+[amex:Page] > amex:ContentItem
+  - amex:Level (long)
+  - amex:ParentFolder (string)
+  - amex:Category (string)
+  - amex:PagePath (string)
+  - amex:URL (string)
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+
+	<ResourceLink global="jdbc/FlagOEESiteDS" name="jdbc/FlagOEESiteDS" type="javax.sql.DataSource"/>
+
+	<ResourceLink name="oee.jackrabbit.repository.path" global="oee.jackrabbit.repository.path" type="java.lang.String" />
+	<ResourceLink name="open.deploy.receiver.directory.path" global="open.deploy.receiver.directory.path" type="java.lang.String" />
+
+	<ResourceLink name="google.analytics.site.id" global="google.analytics.site.id" type="java.lang.String" />
+		
+</Context>

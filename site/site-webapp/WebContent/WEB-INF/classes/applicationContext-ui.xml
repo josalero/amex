@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<!-- <context:property-placeholder location="classpath*:application.properties" /> -->
+	
+	<bean id="dataConfigPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+		<property name="locations"> 
+			<list>
+				<value>classpath*:application.properties</value> 
+			</list> 
+		</property> 
+		<property name="ignoreResourceNotFound" value="true" /> 
+		<property name="ignoreUnresolvablePlaceholders" value="false" /> 
+		<property name="searchSystemEnvironment" value="true" /> 
+	</bean>
+		
+	<bean id="contentManager" class="com.bac.oee.content.ContentManager" init-method="init">
+		<property name="contentRepoAccessDao" ref="contentRepoAccessDao" />
+		<property name="contentItemUnmarshaller" ref="contentItemUnmarshaller"/>
+		<property name="navigationUnmarshaller" ref="navigationUnmarshaller"/>
+		<property name="tagContainerUnmarshaller" ref="tagContainerUnmarshaller"/>
+	</bean>	
+	
+	<jee:jndi-lookup id="oee.jackrabbit.repository.path" jndi-name="oee.jackrabbit.repository.path" />		
+
+	<jee:jndi-lookup id="google.analytics.site.id" jndi-name="google.analytics.site.id" />		
+
+	<import resource="classpath:/applicationContext.xml" />
+
+	<import resource="classpath:/spring-web-services.xml" />
+
+	<!-- Struts 2 Action Bean Definitions -->
+	<bean id="abstractBaseAction" abstract="true" class="com.bac.oee.struts.action.AbstractBaseAction"/>	
+	<bean id="indexAction" parent="abstractBaseAction" class="com.bac.oee.struts.action.IndexAction" />
+	<bean id="pageAction" parent="abstractBaseAction" class="com.bac.oee.struts.action.PageAction" />
+	<bean id="redirectAction" class="com.bac.oee.struts.action.RedirectAction" />
+	<bean id="pageNotFoundAction" parent="abstractBaseAction" class="com.bac.oee.struts.action.PageNotFoundAction" />
+	<bean id="serverErrorAction" parent="abstractBaseAction" class="com.bac.oee.struts.action.ServerErrorAction" />
+	<bean id="transcriptAction" class="com.bac.oee.struts.action.TranscriptAction" />
+	<bean id="filterAction" class="com.bac.oee.struts.action.FilterAction" parent="abstractBaseAction" >
+	</bean>
+		
+  <util:map id="levelsMap">
+        <entry key="index" value-ref="indexLevel"/>
+    </util:map>
+	
+	
+	<!-- Struts 2 Action Bean Definitions -->
+ 
+	<!--bean id="loadCMSContentTask" class="com.bac.oee.webservice.jobs.LoadCMSContentTask"/>
+	
+	<bean id="loadCMSContentJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+
+		<property name="jobClass" value="com.bac.oee.webservice.jobs.LoadCMSContentQuartzJob" />
+
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="loadCMSContentTask" value-ref="loadCMSContentTask" />
+			</map>
+		</property>
+
+	</bean>
+
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+
+		<property name="jobDetail" ref="loadCMSContentJob" />
+		<property name="cronExpression" value="0 0/1 * * * ?" />
+
+	</bean>
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	
+		<property name="jobDetails">
+			<list>
+				<ref bean="loadCMSContentJob" />
+			</list>
+		</property>
+ 
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger" />
+			</list>
+		</property>
+	</bean-->
+
+</beans>
+

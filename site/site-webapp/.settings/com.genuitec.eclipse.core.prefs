@@ -1,0 +1,5 @@
+#Fri Jul 20 11:15:27 EDT 2012
+eclipse.preferences.version=1
+validator.Checked=test-harness,target,WebContent
+validator.Revalidate=false
+validator.Unchecked=

@@ -1,0 +1,63 @@
+Application FlagOEESite {
+    basePackage=com.bac.oee
+
+	Module security {   
+	 
+    	Service ContentService {
+    		com.bac.oee.content.Navigation getPrimaryNavigation();
+    	}
+    	
+        Service OEESiteUserService {
+    
+            @OEESiteUser findByUserName(String userName) => OEESiteUserRepository.findByUserName;
+            @OEESiteUser findByFirstName(String firstName) => OEESiteUserRepository.findByFirstName;
+            @OEESiteUser findByLastName(String lastName) => OEESiteUserRepository.findByLastName;
+
+            List<@OEESiteUser> findByZipCode(String zipCode) => OEESiteUserRepository.findByZipCode;
+        }
+    	
+        Entity OEESiteUser {
+        
+			scaffold
+        
+            Long id key;
+        
+            EncryptedStringUserType userName;
+            EncryptedStringUserType firstName;
+            EncryptedStringUserType lastName;
+            EncryptedStringUserType emailAddress;
+            HashedStringUserType password;
+            EncryptedStringUserType zipCode;
+            String description nullable;
+            Boolean isActive;
+            
+            Repository OEESiteUserRepository {
+            	@OEESiteUser findByUserName(String userName) throws RepositoryException;
+            	@OEESiteUser findByFirstName(String firstName) throws RepositoryException;
+            	@OEESiteUser findByLastName(String lastName) throws RepositoryException;
+            	List<@OEESiteUser> findByZipCode(String zipCode) throws RepositoryException gap;
+            }
+        }
+    }
+        
+    Module poll {
+    
+    	Service PollResultService {
+    		List<@PollResult> findByCmsPollId(String cmsPollId) => PollResultRepository.findByCmsPollId;
+    		@PollResult findByCmsPollIdAndAnswerKey(String cmsPollId, Integer answerKey) => PollResultRepository.findByCmsPollIdAndAnswerKey;
+    	}
+    
+    	Entity PollResult {
+    		scaffold
+    		Long id key;
+    		String cmsPollId;
+    		Integer answerKey;
+    		Integer counter;
+    		
+    		Repository PollResultRepository {
+    			List<@PollResult> findByCmsPollId(String cmsPollId) throws RepositoryException;
+    			@PollResult findByCmsPollIdAndAnswerKey(String cmsPollId, Integer answerKey) throws RepositoryException;
+    		}
+    	}
+    }
+ }
