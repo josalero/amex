@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<content-item locale="en_US" xmlns="http://www.amex.com/srt/content">
+
+	<id><![CDATA[index]]></id>
+
+	<cms-id>1234</cms-id>
+
+	<template><![CDATA[index]]></template>
+	<content-type><![CDATA[page]]></content-type>
+	<url><![CDATA[/amex/srt/index.html]]></url>
+	
+	<metadata>
+		<htmltitle><![CDATA[Bank of America Employee Experience]]></htmltitle>
+		<metakeywords><![CDATA[about bank of america]]></metakeywords>
+		<metadescription><![CDATA[Discover how Bank of America is strengthening communities through lending, investing and giving. Learn how we are doing more every day.]]></metadescription>
+	</metadata>
+	
+	<credit-page>
+		<page-name><![CDATA[Name Here]]></page-name>
+		<page-description><![CDATA[Description Here]]></page-description>
+
+		<table>
+			<row>
+				<name><![CDATA[Name Here]]></name>
+				<description><![CDATA[Description Here]]></description>
+			</row>
+			<row>
+				<name><![CDATA[Name Here]]></name>
+				<description><![CDATA[Description Here]]></description>
+			</row>
+			<row>
+				<name><![CDATA[Name Here]]></name>
+				<description><![CDATA[Description Here]]></description>
+			</row>
+			<row>
+				<name><![CDATA[Name Here]]></name>
+				<description><![CDATA[Description Here]]></description>
+			</row>
+			<row>
+				<name><![CDATA[Name Here]]></name>
+				<description><![CDATA[Description Here]]></description>
+			</row>
+		</table>
+ 	</credit-page>	
+</content-item>
