@@ -122,26 +122,6 @@ public class ContentManager implements InitializingBean,
 			if (aReporFileData.isUpdate()) {
 				updateFileMap.put(aReporFileData.getFilePath(), aReporFileData);
 			}
-
-			// Add one by one
-
-			// addedOrUpdatedNodeRefs = new ArrayList<NodeRef>();
-			//
-			// List<RepoFileData> filesToAdd = new ArrayList<RepoFileData>(1);
-			// filesToAdd.add(aReporFileData);
-			//
-			// try {
-			//
-			// log.debug("FILE: " + aReporFileData.getFilePath());
-			//
-			// List<NodeRef> anAddedOrUpdatedNodeRefs =
-			// contentRepoAccessDao.addOrUpdateFiles(filesToAdd);
-			//
-			// addedOrUpdatedNodeRefs.addAll(anAddedOrUpdatedNodeRefs);
-			// }
-			// catch (Exception exception) {
-			// log.error(exception);
-			// }
 		}
 
 		long start = System.currentTimeMillis();
@@ -200,7 +180,7 @@ public class ContentManager implements InitializingBean,
 		String locale = (String) pageNodeRef.getProperties().get(
 				"amex:Locale");
 		String pagePath = (String) pageNodeRef.getProperties().get(
-				"amex:PagePath");
+				"amex:URL");
 
 		String pageCacheKey = locale + "/" + pagePath;
 
@@ -281,60 +261,6 @@ public class ContentManager implements InitializingBean,
 		}
 	}
 
-	/*public Navigation retrieveNavigation(String locale) {
-		@SuppressWarnings("unused")
-		String typeName = NAVIGATION_TYPE;
-		Navigation navigation = null;
-		String jcrPath = "/xml/" + locale + "/navigation/navigation.xml";
-		String pageCacheKey = jcrPath;
-
-		// Lookup in cache
-		navigation = (Navigation) runtimePageCache.retrieve(pageCacheKey);
-
-		if (navigation == null) {
-			long timestamp = System.currentTimeMillis();
-			ContentItem contentItem = retrieveNavigationContentItem(locale);
-
-			if (contentItem == null) {
-				log.warn("Unable to find a navigation content item!");
-				return null;
-			}
-
-			log.debug("navigationNodeRef: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-
-			// Populate and cache
-			timestamp = System.currentTimeMillis();
-			navigation = (Navigation) contentItem.getContent();
-			runtimePageCache.store(pageCacheKey, navigation);
-			log.debug("Navigation Unmarshal: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-		}
-
-		return navigation;
-	}*/
-
-	/*private Navigation unmarshalNavigation(NodeRef navigationNodeRef) {
-
-		Navigation navigationJCRObject = null;
-
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
-				navigationNodeRef.getContent());
-		StreamSource streamSource = new StreamSource(byteArrayInputStream);
-
-		try {
-			navigationJCRObject = (Navigation) navigationUnmarshaller
-					.unmarshal(streamSource);
-		} catch (XmlMappingException xmlMappingException) {
-			log.error(xmlMappingException);
-		} catch (IOException ioException) {
-			log.error(ioException);
-		}
-
-		return navigationJCRObject;
-	}*/
-
-
 	public String getPageCategory(String filePath) {
 
 		String localeString = filePath.substring("/xml/".length());
@@ -378,15 +304,6 @@ public class ContentManager implements InitializingBean,
 		return pagePath;
 	}
 
-
-	public ContentItem retrievePage(NodeRef pageNodeRef, String locale) {
-
-		String pageCategory = getPageCategory(pageNodeRef.getPath());
-		String pagePath = getPagePath(pageNodeRef.getPath());
-
-		return retrievePage(pageCategory, pagePath, locale);
-	}
-	
 	public ContentItem retrievePage(String cmsID) {
 		ContentItem pageContentJCRObject = null;
 
@@ -419,13 +336,6 @@ public class ContentManager implements InitializingBean,
 
 			Page pageJCRObject = (Page) pageContentJCRObject.getContent();
 
-			if (pageJCRObject.getPageName() == null) {
-
-				String pageName = obtainPageNameFromPageJCRObject(
-						pageJCRObject, pageNodeRef);
-				pageJCRObject.setPageName(pageName);
-			}
-
 			runtimePageCache.store(cmsID, pageContentJCRObject);
 
 			log.debug("Page Unmarshal: elapsed = "
@@ -435,7 +345,6 @@ public class ContentManager implements InitializingBean,
 		return pageContentJCRObject;
 	}
 	
-
 	public ContentItem retrievePageByURL(String URL) {
 		ContentItem pageContentJCRObject = null;
 
@@ -475,191 +384,6 @@ public class ContentManager implements InitializingBean,
 		return pageList.get(0);
 	}
 		
-	public ContentItem retrievePage(String category, String pagePath,
-			String locale) {
-		ContentItem pageContentJCRObject = null;
-
-		// Lookup in cache
-		String pageCacheKey = locale + "/" + pagePath;
-
-		pageContentJCRObject = (ContentItem) runtimePageCache
-				.retrieve(pageCacheKey);
-
-		if (pageContentJCRObject == null) {
-			long timestamp = System.currentTimeMillis();
-			NodeRef pageNodeRef = findPageNodeRef(category, pagePath, locale);
-			log.debug("findPageNodeRef: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-
-			// Populate and cache
-			timestamp = System.currentTimeMillis();
-
-			// returning null when the pageNode not found
-			if (null == pageNodeRef) {
-				return null;
-			}
-			pageContentJCRObject = unmarshalContentItem(pageNodeRef);
-			pageContentJCRObject.setJcrPath(pageNodeRef.getPath());
-
-			// Process Page data to verify/populate pageName and pageParentName
-
-			Page pageJCRObject = (Page) pageContentJCRObject.getContent();
-
-			if (pageJCRObject.getPageName() == null) {
-
-				String pageName = obtainPageNameFromPageJCRObject(
-						pageJCRObject, pageNodeRef);
-				pageJCRObject.setPageName(pageName);
-			}
-
-			runtimePageCache.store(pageCacheKey, pageContentJCRObject);
-
-			log.debug("Page Unmarshal: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-		}
-
-		return pageContentJCRObject;
-	}
-
-
-
-	public ContentItem retrieveTile(String cmsId, String locale) {
-		ContentItem contentItem = null;
-
-		// Lookup in cache
-		String pageCacheKey = locale + "/" + cmsId;
-		contentItem = (ContentItem) runtimePageCache.retrieve(pageCacheKey);
-
-		if (contentItem == null) {
-			long timestamp = System.currentTimeMillis();
-			NodeRef nodeRef = findTileNodeRef(cmsId, locale);
-
-			if (nodeRef == null) {
-				log.error("Unable to find a tile node for the ID: " + cmsId
-						+ "!");
-				return null;
-			}
-
-			log.debug("findPageNodeRef: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-
-			// Populate and cache
-			timestamp = System.currentTimeMillis();
-
-			contentItem = unmarshalContentItem(nodeRef);
-			contentItem.setJcrPath(nodeRef.getPath());
-
-			runtimePageCache.store(pageCacheKey, contentItem);
-			log.debug("Poll Unmarshal: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-		}
-
-		return contentItem;
-	}
-
-	private ContentItem getParentPageJCRObject(String locale, String jcrPath) {
-		boolean isAnArticle = jcrPath.contains("articles");
-		String[] elements = jcrPath.split("/");
-		String parentPageRelativeName = elements[elements.length - 2];
-
-		if (parentPageRelativeName.equals(locale)) {
-			return null;
-		}
-
-		parentPageRelativeName = parentPageRelativeName.replace(".xml", "");
-		String parentPagePath = null;
-
-		if (!isAnArticle) {
-			parentPagePath = elements[3];
-		} else {
-			parentPagePath = elements[4];
-		}
-
-		if (!parentPagePath.equals(parentPageRelativeName)) {
-			parentPagePath += "/" + parentPageRelativeName;
-		}
-
-		String parentPageCategory = null;
-
-		if (!isAnArticle) {
-			parentPageCategory = elements[3];
-		} else {
-			parentPageCategory = elements[4];
-		}
-
-		ContentItem parentPageContentItem = retrievePage(parentPageCategory,
-				parentPagePath, locale);
-
-		return parentPageContentItem;
-	}
-
-	private String obtainPageNameFromPageJCRObject(Page pageJCRObject,
-			NodeRef pageNodeRef) {
-
-		String pageName = null;
-
-		String path = pageNodeRef.getPath();
-
-		String[] elements = path.split("/");
-
-		pageName = elements[elements.length - 1];
-		pageName = pageName.replace(".xml", "");
-		pageName = pageName.replace('-', ' ');
-
-		pageName = pageName.toUpperCase();
-
-		return pageName;
-	}
-
-	/**
-	 * @param localeString
-	 * @param limit
-	 * @param whereClause
-	 * @param jcrContentType
-	 * @return
-	 */
-	public List<ContentItem> retrievePublishedItems(String localeString,
-			Integer limit, Integer offset, String whereClause,
-			String orderByClause, String jcrContentType) {
-
-		List<ContentItem> contentItems = new ArrayList<ContentItem>();
-
-		long timestamp = System.currentTimeMillis();
-
-		// Example: SELECT * FROM [nt:base] AS s WHERE s.[jcr:created] >
-		// CAST('2012-01-05T00:00:00.000Z' AS DATE)
-
-		if (StringUtils.isEmpty(orderByClause)) {
-			orderByClause = "ORDER BY [amex:PublishedDate] DESC";
-		}
-
-		List<NodeRef> nodeRefList = findContentItemsByTypeAndQuery(
-				localeString, jcrContentType, whereClause, orderByClause,
-				limit, offset);
-
-		log.debug("findContentItemsByTypeAndQuery: elapsed = "
-				+ (System.currentTimeMillis() - timestamp));
-
-		// Populate and cache
-		timestamp = System.currentTimeMillis();
-
-		for (NodeRef nodeRef : nodeRefList) {
-			ContentItem contentItem = (ContentItem) runtimeContentCache
-					.retrieve(nodeRef.getCmsId());
-
-			if (contentItem == null) {
-				contentItem = unmarshalContentItem(nodeRef);
-				runtimeContentCache.store(nodeRef.getCmsId(), contentItem);
-			}
-
-			contentItems.add(contentItem);
-		}
-
-		log.debug("Content Items Unmarshal/Retrieve from Cache: elapsed = "
-				+ (System.currentTimeMillis() - timestamp));
-		return contentItems;
-	}
-
 
 	public ContentItem retrieveContentItemByCmsId(String cmsId) {
 		ContentItem contentItem = (ContentItem) runtimeContentCache
@@ -723,88 +447,13 @@ public class ContentManager implements InitializingBean,
 		return nodeList.get(0);
 	}
 
-	private List<NodeRef> findContentItemsByTypeAndQuery(String locale,
-			String jcrTypeName, String whereClause, String orderBy,
-			Integer limit, Integer offset) {
-
-		String sqlQueryString = "SELECT * FROM [" + jcrTypeName + "]";
-
-		if (whereClause != null && !whereClause.isEmpty()) {
-			sqlQueryString += " WHERE " + whereClause;
-		}
-
-		if (orderBy != null && !orderBy.isEmpty()) {
-			sqlQueryString += " ";
-			sqlQueryString += orderBy;
-		}
-
-		log.debug("findContentItemsByTypeAndQuery: SQL2 query = "
-				+ sqlQueryString);
-
-		Set<String> propNames = new HashSet<String>();
-
-		propNames.add("amex:Locale");
-		propNames.add("amex:Type");
-		propNames.add("amex:CMS_ID");
-
-		List<NodeRef> nodeList = contentRepoAccessDao.findFiles(propNames,
-				sqlQueryString, limit, offset);
-
-		return nodeList;
-	}
-
-	public NodeRef findPageNodeRef(String category, String pagePath,
-			String locale) {
-
-		Set<String> propNames = new HashSet<String>();
-
-		String sqlQueryString = "SELECT * FROM [amex:Page] WHERE [amex:Category] = '"
-				+ category
-				+ "' AND [amex:PagePath] = '"
-				+ pagePath
-				+ "' AND [amex:Locale] = '" + locale + "'";
-
-		propNames.add("amex:Category");
-		propNames.add("amex:PagePath");
-
-		List<NodeRef> nodeList = contentRepoAccessDao.findFiles(propNames,
-				sqlQueryString, null, null);
-
-		if (nodeList == null) {
-			log.warn("There were no JCR nodes found for category "
-					+ category + " and page path " + pagePath);
-		}
-		if (nodeList.isEmpty()) {
-
-			if (log.isDebugEnabled()) {
-				log.warn("There were no JCR nodes found for category "
-						+ category + " and page path " + pagePath);
-			}
-
-			return null;
-		} else if (nodeList.size() > 1) {
-			// TODO: Throw an exception
-			if (log.isDebugEnabled()) {
-				log.warn("There was more than one JCR node found for the category "
-						+ category + " and page path " + pagePath);
-			}
-
-			throw new IllegalStateException(
-					"There was more than one JCR node found for the category "
-							+ category + " and page path " + pagePath);
-		}
-
-		return nodeList.get(0);
-	}
-
+	
 	public List<NodeRef> findPageNodeRefs(String locale) {
 		return findPageNodeRefs(locale, null);
 	}
 
 	public List<NodeRef> findPageNodeRefs(String locale, String orderByClause) {
 		Set<String> propNames = new HashSet<String>();
-		propNames.add("amex:Category");
-		propNames.add("amex:PagePath");
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
 				.append("SELECT * FROM [amex:Page] WHERE [amex:Locale] = '")
@@ -834,25 +483,6 @@ public class ContentManager implements InitializingBean,
 		return nodeList;
 	}
 
-
-	public NodeRef findTileNodeRef(String cmsId, String locale) {
-		String sql = "SELECT * FROM [amex:Tile] WHERE [amex:CMS_ID] = '"
-				+ cmsId + "' AND [amex:Locale] = '" + locale + "'";
-
-		List<NodeRef> nodeList = contentRepoAccessDao.findFiles(null, sql,
-				null, null);
-
-		if (nodeList == null || nodeList.isEmpty()) {
-			log.warn("There were no JCR tile nodes found!");
-			return null;
-		}
-
-		if (nodeList.size() > 1) {
-			log.warn("There was more than one TILE node found in the JCR!");
-		}
-
-		return nodeList.get(0);
-	}
 
 	public void clearRuntimeContentCache() {
 		runtimeContentCache.clear();
@@ -884,213 +514,6 @@ public class ContentManager implements InitializingBean,
 		}
 	}
   
-	public List<ContentItem> retrievePages(String localeString) {
-		return retrieveOrderedPages(localeString, null);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<ContentItem> retrieveOrderedPages(String localeString,
-			String orderByClause) {
-		List<ContentItem> pages = null;
-
-		// Lookup in cache
-		String pageCacheKey = "pages_" + localeString;
-		pages = (List<ContentItem>) runtimePageCache.retrieve(pageCacheKey);
-
-		if (pages == null) {
-			pages = new ArrayList<ContentItem>();
-			long timestamp = System.currentTimeMillis();
-			List<NodeRef> nodeRefs = findPageNodeRefs(localeString,
-					orderByClause);
-			log.debug("findPageNodeRef: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-
-			// Populate and cache
-			timestamp = System.currentTimeMillis();
-
-			for (NodeRef nodeRef : nodeRefs) {
-				ContentItem contentItem = unmarshalContentItem(nodeRef);
-				contentItem.setJcrPath(nodeRef.getPath());
-				String pagePath = (String) nodeRef.getProperties().get(
-						"amex:PagePath");
-				contentItem.setPagePath(pagePath);
-
-				// Process Page data to verify/populate pageName and
-				// pageParentName
-				Page page = (Page) contentItem.getContent();
-
-				if (page.getPageName() == null) {
-					String pageName = obtainPageNameFromPageJCRObject(page,
-							nodeRef);
-					page.setPageName(pageName);
-				}
-
-				pages.add(contentItem);
-			}
-
-			runtimePageCache.store(pageCacheKey, pages);
-			log.debug("Page Unmarshal: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-		}
-
-		return pages;
-	}
-
-	public List<ContentItem> retrievePages(String localeString, Integer limit) {
-		return retrievePublishedItems(localeString, limit, null, "", "",
-				ContentRepoAccessDao.REPO_AMEX_PAGE_TYPE);
-	}
-
-	public List<ContentItem> retrievePages(String localeString, String topic,
-			String program) {
-		Map<String, String> whereClauseMap = new LinkedHashMap<String, String>();
-
-		if (StringUtils.isNotEmpty(topic)) {
-			whereClauseMap.put("[amex:TopicTaxonomy]", topic);
-		}
-
-		if (StringUtils.isNotEmpty(program)) {
-			whereClauseMap.put("[amex:ProgramTaxonomy]", program);
-		}
-
-		StringBuilder stringBuilder = new StringBuilder();
-		int counter = 1;
-
-		if (!whereClauseMap.isEmpty()) {
-			for (Map.Entry<String, String> entry : whereClauseMap.entrySet()) {
-				if (StringUtils.isNotEmpty(entry.getValue())) {
-					stringBuilder.append("(").append(entry.getKey())
-							.append(" = '").append(entry.getValue())
-							.append("')");
-				}
-
-				if (counter < whereClauseMap.size()) {
-					stringBuilder.append(" AND ");
-				}
-
-				counter++;
-			}
-		}
-
-		String whereClause = stringBuilder.toString();
-		return retrievePublishedItems(localeString, null, null, whereClause,
-				null, ContentRepoAccessDao.REPO_AMEX_PAGE_TYPE);
-	}
-
-	/*public TagContainerItem retrieveTagItem(String tagName) {
-		TagContainerItem tagItem = null;
-		String jcrPath = "/xml/" + "en_US"
-				+ "/tagging/coremetrics-tag-mapping.xml";
-		String pageCacheKey = jcrPath;
-		// Lookup in cache
-		TagContainer tagContainer = (TagContainer) runtimePageCache
-				.retrieve(pageCacheKey);
-
-		if (tagContainer == null) {
-			long timestamp = System.currentTimeMillis();
-			NodeRef nodeRef = contentRepoAccessDao.getFile(jcrPath);
-			log.debug("navigationNodeRef: elapsed = "
-					+ (System.currentTimeMillis() - timestamp));
-			// Populate and cache
-			timestamp = System.currentTimeMillis();
-			if (nodeRef != null) {
-				tagContainer = unmarshalTagContainer(nodeRef);
-				runtimePageCache.store(pageCacheKey, tagContainer);
-				log.debug("Navigation Unmarshal: elapsed = "
-						+ (System.currentTimeMillis() - timestamp));
-				if (this.tagItemMap == null && tagContainer != null) {
-					tagItemMap = new HashMap<String, TagContainerItem>();
-					String key = "";
-					pdfDownloadList = new ArrayList<TagContainerItem>();
-					for (TagContainerItem item : tagContainer.getTagItemList()) {
-						if (item != null) {
-							if (item.getTagType() != null
-									&& item.getTagType().equalsIgnoreCase(
-											"Dart")) {
-								key = item.getTagType() + item.getCmsPath()
-										+ item.getType();
-							} else {
-								key = item.getTagType() + item.getCmsPath();
-							}
-							tagItemMap.put(key, item);
-							if (item.getCmsPath() != null
-									&& item.getCmsPath().endsWith(".pdf")) {
-								pdfDownloadList.add(item);
-							}
-						}
-					}
-				}
-			}
-		}
-		if (tagItemMap != null) {
-			tagItem = tagItemMap.get(tagName);
-		}
-
-		return tagItem;
-	}*/
-
-/*	private TagContainer unmarshalTagContainer(NodeRef nodeRef) {
-		if (nodeRef == null) {
-			return null;
-		}
-
-		TagContainer jcrObject = null;
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
-				nodeRef.getContent());
-		StreamSource streamSource = new StreamSource(byteArrayInputStream);
-
-		try {
-			jcrObject = (TagContainer) this.tagContainerUnmarshaller
-					.unmarshal(streamSource);
-		} catch (XmlMappingException xmlMappingException) {
-			log.error(xmlMappingException);
-		} catch (IOException ioException) {
-			log.error(ioException);
-		}
-
-		return jcrObject;
-	}
-*/
-/*	private void updateTagContainer(String pageCacheKey, NodeRef nodeRef) {
-		if (pageCacheKey != null
-				&& pageCacheKey.contains("coremetrics-tag-mapping")) {
-			TagContainer tagContainer = unmarshalTagContainer(nodeRef);
-
-			if (tagContainer != null) {
-				runtimePageCache.store(pageCacheKey, tagContainer);
-
-				if (this.tagItemMap == null) {
-					tagItemMap = new HashMap<String, TagContainerItem>();
-				}
-				tagItemMap.clear();
-				if (this.pdfDownloadList == null) {
-					pdfDownloadList = new ArrayList<TagContainerItem>();
-				}
-				pdfDownloadList.clear();
-
-				String key = "";
-				for (TagContainerItem item : tagContainer.getTagItemList()) {
-					if (item != null) {
-						if (item.getTagType() != null
-								&& item.getTagType().equalsIgnoreCase("Dart")) {
-							key = item.getTagType() + item.getCmsPath()
-									+ item.getType();
-						} else {
-							key = item.getTagType() + item.getCmsPath();
-						}
-						tagItemMap.put(key, item);
-						if (item.getCmsPath() != null
-								&& item.getCmsPath().endsWith(".pdf")) {
-							pdfDownloadList.add(item);
-						}
-					}
-				}
-			}
-		}
-	}*/
-	
-
-
 	public List<ContentItem> retrieveReferencedPages(ContentItem cItem){
 		List<ContentItem> contentItemList=new ArrayList<ContentItem>();
 		if(cItem==null){

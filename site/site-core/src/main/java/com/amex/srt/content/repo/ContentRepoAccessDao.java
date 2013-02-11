@@ -726,113 +726,58 @@ public class ContentRepoAccessDao extends JcrDaoSupport implements InitializingB
 	}
 
 	public void printNodeToLog(Node node, Log targetLog, String propertyFilter) throws RepositoryException {
-
 		if (!node.getName().endsWith("jcr:content")) {
-
 			String type = node.getProperty(JcrConstants.JCR_PRIMARYTYPE).getString();
-			
-			String level = "NA";
-			String category = "NA";
-			String pagePath = "NA";
-			String pageName = "NA";
-			
-			String coremetricsTag = "NA";
 			
 			String nodePath = node.getPath();
 			
 			PropertyIterator properties = node.getProperties();
-
-			if (type.equals(ContentRepoAccessDao.REPO_AMEX_PAGE_TYPE) && !nodePath.startsWith("/xml/en_US/articles/")) {
-				
-//				 Property - amex:PagePath = global-impact
-//				 Property - amex:Locale = en_US
-//				 Property - amex:Type = PAGE
-//				 Property - amex:Category = global-impact
-				
-				category = node.getProperty("amex:Category").getString().replace('-', ' ');
-				category = StringUtils.capitaliseAllWords(category);
-
-				pagePath = node.getProperty("amex:PagePath").getString();
-				
-				String tmp = nodePath.replace("/xml/en_US/", "");
-				String[] elements = tmp.split("/");
-				
-				pageName = elements[elements.length - 1];
-				pageName = pageName.replace(".xml", "");
-				pageName = pageName.replace('-', ' ');
-				pageName = StringUtils.capitaliseAllWords(pageName);
-				
-				level = "L" + (elements.length + 1);
-				
-				coremetricsTag = node.getPath();
-				coremetricsTag = coremetricsTag.replace("/xml/en_US/", "");
-				coremetricsTag = coremetricsTag.replace(".xml", "");
-				coremetricsTag = coremetricsTag.replace('-', ' ');
-
-				String[] components = coremetricsTag.split("/");
-				coremetricsTag = "";
-				for (int idx = 0; idx < components.length; ++idx) {
-					String component = StringUtils.capitaliseAllWords(components[idx]);
-					coremetricsTag += component;
-					coremetricsTag += "_";					
-				}
-				
-				coremetricsTag = coremetricsTag.substring(0, coremetricsTag.length() - 1);
-
-				coremetricsTag = coremetricsTag.replace(" ", "");
-				
-				coremetricsTag = "ENT:MKT:CorpRep;" + coremetricsTag;
-			}
-			else {
-				
-				
-			}
 			
-			targetLog.info(node.getName() + ": Path - " + nodePath + " [" + type + "] " + 
-					level + " \"" + category + "\"" + " \"" + pageName + "\" \"" + pagePath + "\"" + " \"" + coremetricsTag + "\"");
-			
-			targetLog.info("COREMETRICS:" + node.getName() + ": Path - |" + nodePath + "|[" + type + "]|" + 
-					level + "|" + category + "|" + pageName + "|" + pagePath + "|" + coremetricsTag );
-			
-			while (properties.hasNext()) {
+			if (type.equals(ContentRepoAccessDao.REPO_AMEX_PAGE_TYPE)) {
+				targetLog.debug("\tnodePath.getName()" + node.getName());
 
-				Property property = properties.nextProperty();
+				while (properties.hasNext()) {
 
-				if (propertyFilter != null && property.getName().startsWith(propertyFilter)) {
+					Property property = properties.nextProperty();
 
-					StringBuilder propLogStringBuilder = new StringBuilder();
-					propLogStringBuilder.append("     Property - " + property.getName() + " = ");
+					if (propertyFilter != null && property.getName().startsWith(propertyFilter)) {
 
-					if (property.getDefinition().isMultiple()) {
+						StringBuilder propLogStringBuilder = new StringBuilder();
+						propLogStringBuilder.append("     Property - " + property.getName() + " = ");
 
-						Value[] values = property.getValues();
-						for (int i = 0; i < values.length; i++) {
-							if (i > 0) {
-								propLogStringBuilder.append(", ");
+						if (property.getDefinition().isMultiple()) {
+
+							Value[] values = property.getValues();
+							for (int i = 0; i < values.length; i++) {
+								if (i > 0) {
+									propLogStringBuilder.append(", ");
+								}
+								propLogStringBuilder.append(values[i].getString());
 							}
-							propLogStringBuilder.append(values[i].getString());
-						}
-					}
-					else {
-
-						if (property.getType() == PropertyType.BINARY) {
-							propLogStringBuilder.append("<binary>");
 						}
 						else {
-							propLogStringBuilder.append(property.getString());
+
+							if (property.getType() == PropertyType.BINARY) {
+								propLogStringBuilder.append("<binary>");
+							}
+							else {
+								propLogStringBuilder.append(property.getString());
+							}
 						}
+
+						targetLog.info(propLogStringBuilder.toString());
 					}
-
-					targetLog.info(propLogStringBuilder.toString());
-				}
+				}				
 			}
-
+			
 			NodeIterator nodes = node.getNodes();
 			while (nodes.hasNext()) {
 				Node child = nodes.nextNode();
 				printNodeToLog(child, targetLog, propertyFilter);
-			}
+			}			
+			
 		}
+
 	}
 
 	public byte[] readStreamIntoByteArray(InputStream inputStream) throws IOException {

@@ -8,7 +8,7 @@
 
 	<template><![CDATA[index]]></template>
 	<content-type><![CDATA[page]]></content-type>
-	<url><![CDATA[/amex/srt/index.html]]></url>
+	<url><![CDATA[/amex/srt/dashboard.html]]></url>
 	
 	<metadata>
 		<htmltitle><![CDATA[Bank of America Employee Experience]]></htmltitle>
