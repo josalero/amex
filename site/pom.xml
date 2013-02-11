@@ -52,8 +52,8 @@
 	
 		<module>site-content</module>
 		<module>site-core</module>
-		<!--module>site-service</module>
-		<module>site-webapp</module>
+		<module>site-service</module>
+		<!--module>site-webapp</module>
 		<module>site-common-webservice</module-->
 		
 	</modules>
