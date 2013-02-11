@@ -1,0 +1,5 @@
+# Check sum file
+# Entries are in the following format: checksum:file
+
+ecb2d58758db5e9da8d6721ef7a7046c0ca18c27:src\test\java\com\amex\srt\card\serviceapi\ContentServiceTest.java
+eb5b36bf0a968e15a07e8447cd89e5458a6acaea:src\main\java\com\amex\srt\card\serviceimpl\ContentServiceImpl.java
