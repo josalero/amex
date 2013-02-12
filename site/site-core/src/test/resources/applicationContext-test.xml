@@ -7,7 +7,7 @@
 		<constructor-arg index="0" value="C:\newproject\cmscontent" />
 	</bean>
 
-	<bean id="oee.jackrabbit.repository.path" class="java.lang.String">
+	<bean id="amex.jackrabbit.repository.path" class="java.lang.String">
 		<constructor-arg index="0" value="file:target/oee-jackrabbit-repository" />
 	</bean>
 		

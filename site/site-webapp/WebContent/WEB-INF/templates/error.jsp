@@ -1,5 +1,5 @@
 <%@page import="java.util.Locale"%>
-<%@page import="com.bac.oee.struts.ViewConstants"%>
+<%@page import="com.amex.srt.struts.ViewConstants"%>
 <%@page import="com.amex.srt.AppConstants"%>
 <%@page import="com.bac.oee.model.PageData"%>
 <%@ include file="/WEB-INF/jsp/include/imports-taglibs.jsp" %>

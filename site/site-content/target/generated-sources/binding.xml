@@ -1,0 +1,74 @@
+<binding xmlns:ns1="http://www.amex.com/srt/content" name="binding" package="com.amex.srt.content" trim-whitespace="true">
+  <namespace uri="http://www.amex.com/srt/content" default="elements"/>
+  <format label="ns1:contentTypeEnum" type="com.amex.srt.content.ContentTypeEnum" enum-value-method="xmlValue"/>
+  <format label="ns1:yesNoEnum" type="com.amex.srt.content.YesNoEnum" enum-value-method="xmlValue"/>
+  <format label="ns1:targetEnum" type="com.amex.srt.content.TargetEnum" enum-value-method="xmlValue"/>
+  <format label="ns1:imageTypeEnum" type="com.amex.srt.content.ImageTypeEnum" enum-value-method="xmlValue"/>
+  <mapping abstract="true" type-name="ns1:metadata" class="com.amex.srt.content.Metadata">
+    <value style="element" name="htmltitle" get-method="getHtmltitle" set-method="setHtmltitle" usage="optional"/>
+    <value style="element" name="ada-friendly-name" get-method="getAdaFriendlyName" set-method="setAdaFriendlyName" usage="optional"/>
+    <value style="element" name="canonical-url" get-method="getCanonicalUrl" set-method="setCanonicalUrl" usage="optional"/>
+    <value style="element" name="metakeywords" get-method="getMetakeywords" set-method="setMetakeywords" usage="optional"/>
+    <value style="element" name="metadescription" get-method="getMetadescription" set-method="setMetadescription" usage="optional"/>
+    <value style="element" name="authored-date" get-method="getAuthoredDate" set-method="setAuthoredDate" usage="optional"/>
+    <value style="element" name="published-date" get-method="getPublishedDate" set-method="setPublishedDate" usage="optional"/>
+    <value style="element" name="expiration-date" get-method="getExpirationDate" set-method="setExpirationDate" usage="optional"/>
+    <value style="element" name="geo-taxonomy" get-method="getGeoTaxonomy" set-method="setGeoTaxonomy" usage="optional"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:contentItem" class="com.amex.srt.content.ContentItem">
+    <value style="element" name="id" get-method="getId" set-method="setId"/>
+    <value style="element" name="cms-id" get-method="getCmsId" set-method="setCmsId"/>
+    <value style="element" name="template" get-method="getTemplate" set-method="setTemplate" usage="optional"/>
+    <value style="element" name="content-type" get-method="getContentType" set-method="setContentType" format="ns1:contentTypeEnum"/>
+    <value style="element" name="jcr-path" get-method="getJcrPath" set-method="setJcrPath" usage="optional"/>
+    <value style="element" name="url" get-method="getUrl" set-method="setUrl"/>
+    <structure map-as="ns1:metadata" get-method="getMetadata" set-method="setMetadata" usage="optional" name="metadata"/>
+    <value style="element" name="page-path" get-method="getPagePath" set-method="setPagePath" usage="optional"/>
+    <structure type="com.amex.srt.content.ContentBase" get-method="getContent" set-method="setContent"/>
+  </mapping>
+  <mapping class="com.amex.srt.content.ContentItem" name="content-item">
+    <structure map-as="ns1:contentItem"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:contentBase" class="com.amex.srt.content.ContentBase"/>
+  <mapping class="com.amex.srt.content.ContentBase" name="content">
+    <structure map-as="ns1:contentBase"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:image" class="com.amex.srt.content.Image">
+    <value style="element" name="path" get-method="getPath" set-method="setPath" usage="optional"/>
+    <value style="element" name="alt-text" get-method="getAltText" set-method="setAltText" usage="optional"/>
+    <value style="element" name="caption" get-method="getCaption" set-method="setCaption" usage="optional"/>
+    <value style="element" name="image-type" get-method="getImageType" set-method="setImageType" usage="optional" format="ns1:imageTypeEnum"/>
+    <structure map-as="ns1:hrefLink" get-method="getLink" set-method="setLink" usage="optional" name="link"/>
+    <value style="element" name="target" get-method="getTarget" set-method="setTarget" usage="optional" format="ns1:targetEnum"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:hrefLink" class="com.amex.srt.content.HrefLink">
+    <value style="element" name="link-text" get-method="getLinkText" set-method="setLinkText" usage="optional"/>
+    <value style="element" name="link-url" get-method="getLinkUrl" set-method="setLinkUrl" usage="optional"/>
+    <value style="element" name="link-target" get-method="getLinkTarget" set-method="setLinkTarget" usage="optional" format="ns1:targetEnum"/>
+    <value style="element" name="screen-reader-text" get-method="getScreenReaderText" set-method="setScreenReaderText" usage="optional"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:page" class="com.amex.srt.content.Page">
+    <structure map-as="ns1:contentBase"/>
+    <value style="element" name="page-name" get-method="getPageName" set-method="setPageName" usage="optional"/>
+    <value style="element" name="page-description" get-method="getPageDescription" set-method="setPageDescription" usage="optional"/>
+  </mapping>
+  <mapping extends="com.amex.srt.content.ContentBase" class="com.amex.srt.content.Page" name="page">
+    <structure map-as="ns1:page"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:creditPage" class="com.amex.srt.content.CreditPage">
+    <structure map-as="ns1:page"/>
+    <structure map-as="ns1:table" get-method="getTable" set-method="setTable" usage="optional" name="table"/>
+  </mapping>
+  <mapping extends="com.amex.srt.content.ContentBase" class="com.amex.srt.content.CreditPage" name="credit-page">
+    <structure map-as="ns1:creditPage"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:table" class="com.amex.srt.content.Table">
+    <collection get-method="getRowList" set-method="setRowList" usage="optional" create-type="java.util.ArrayList">
+      <structure map-as="ns1:tablerow" name="row"/>
+    </collection>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:tablerow" class="com.amex.srt.content.Tablerow">
+    <value style="element" name="name" get-method="getName" set-method="setName"/>
+    <value style="element" name="description" get-method="getDescription" set-method="setDescription"/>
+  </mapping>
+</binding>

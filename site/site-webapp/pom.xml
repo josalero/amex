@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.amex.srt</groupId>
 		<artifactId>web-site</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>site-webapp</artifactId>
@@ -91,30 +91,6 @@
 					</descriptors>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<configuration>
-							<target name="js-run">
-								<echo message="Running js.bat/js oee/scripts/build.js"/>
-								<exec dir="${basedir}/WebContent/jmvc" executable="${basedir}/WebContent/jmvc/js.bat" osfamily="windows">
-									<arg value="oee/scripts/build.js" />
-								</exec>
-								<exec osfamily="unix" dir="${basedir}/WebContent/jmvc" executable="${basedir}/WebContent/jmvc/js">
-									<arg value="oee/scripts/build.js" />
-								</exec>
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -132,11 +108,6 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.amex.srt</groupId>
-			<artifactId>site-common-webservice</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -340,14 +311,11 @@
 			<version>2.9.1</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>com.microsoft.jdbc</groupId>
-			<artifactId>sqljdbc4</artifactId>
-			<version>3.0</version>
-			<scope>provided</scope>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.16</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>

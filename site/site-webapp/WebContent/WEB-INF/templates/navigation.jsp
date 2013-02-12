@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<%@page import="com.bac.oee.struts.ViewConstants"%>
+<%@page import="com.amex.srt.struts.ViewConstants"%>
 <%@page import="com.amex.srt.AppConstants"%>
 <%@page import="com.bac.oee.model.PageData"%>
 

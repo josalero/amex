@@ -3,7 +3,7 @@ Application AmexSrtSite {
 
 	Module card {   
     	Service ContentService {
-    		com.amex.srt.content.Page getPageByURL( String URL);
+    		com.amex.srt.content.ContentItem getPageByURL( String URL) throws ContentServiceException;
     	}
     		 	
     }

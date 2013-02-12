@@ -18,6 +18,6 @@
 	<import resource="classpath:/spring-jcr-data-access.xml" />
 	
 	<jee:jndi-lookup id="open.deploy.receiver.directory.path" jndi-name="open.deploy.receiver.directory.path" />
-	<jee:jndi-lookup id="oee.jackrabbit.repository.path" jndi-name="oee.jackrabbit.repository.path" />
+	<jee:jndi-lookup id="amex.jackrabbit.repository.path" jndi-name="amex.jackrabbit.repository.path" />
 	
 </beans>
