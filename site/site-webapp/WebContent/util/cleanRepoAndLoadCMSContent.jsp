@@ -1,6 +1,6 @@
-<%@page import="com.amex.srt.ContentLoadReportEntry"%>
-<%@page import="com.amex.srt.ContentLoadReport"%>
-<%@page import="com.amex.srt.ContentLoader"%>
+<%@page import="com.amex.srt.content.ContentLoadReportEntry"%>
+<%@page import="com.amex.srt.content.ContentLoadReport"%>
+<%@page import="com.amex.srt.content.ContentLoader"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.context.ApplicationContext"%>
 <%@ page language="java" import="java.util.*" pageEncoding="ISO-8859-1"%>
