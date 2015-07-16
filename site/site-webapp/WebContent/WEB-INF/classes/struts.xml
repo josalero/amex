@@ -15,49 +15,26 @@
 	
 		<default-interceptor-ref name="defaultStack" />
 		
-		<action name="**" class="com.bac.oee.struts.action.FilterAction">
+		<action name="**" class="com.amex.srt.struts.action.FilterAction">
 		
-			<result type="chain" name="redirect">
-				<param name="actionName">redirect</param>
-				<param name="namespace">/oee</param>
-			</result>
-			
 			<result type="chain" name="index">
 				<param name="actionName">index</param>
-				<param name="namespace">/oee</param>
-			</result>
-			
-			<result type="chain" name="open-layout-template">
-				<param name="actionName">open-layout</param>
-				<param name="namespace">/oee</param>
-			</result>
-
-			
-			<result type="chain" name="transcript">
-				<param name="actionName">transcript</param>
-				<param name="namespace">/tests</param>
+				<param name="namespace">/amex</param>
 			</result>
 			
 			<result type="chain" name="serverErrorAction">
 				<param name="actionName">serverErrorAction</param>
-				<param name="namespace">/oee</param>
+				<param name="namespace">/amex</param>
 			</result>	
 				
-			<result type="chain" name="bc-integration-test">
-				<param name="actionName">bc-integration-test</param>
-				<param name="namespace">/tests</param>
-			</result>	
-			
-						
 			<result type="chain" name="pageNotFoundAction">
 				<param name="actionName">pageNotFoundAction</param>
-				<param name="namespace">/oee</param>
+				<param name="namespace">/amex</param>
 			</result>	
 		</action>
-
 	</package>
 
-	<package name="internal" extends="struts-default" namespace="/oee">
+	<package name="internal" extends="struts-default" namespace="/amex">
 
 		<result-types>
 			<result-type name="tiles"
@@ -74,24 +51,7 @@
 			<result type="chain" name="serverErrorAction">
 				<param name="actionName">serverErrorAction</param>
 			</result>					
-								
 		</action>
-		
-		
-		<action name="redirect" class="redirectAction">
-			<result name="success">/WEB-INF/jsp/redirect.jsp</result>
-		</action>
-
-		<action name="open-layout" class="pageAction">
-			<interceptor-ref name="defaultStack" />
-			<result name="success" type="tiles">open-layout</result>
-
-			<result type="chain" name="serverErrorAction">
-				<param name="actionName">serverErrorAction</param>
-			</result>					
-			
-		</action>
-
 		
 		<action name="pageNotFoundAction" class="pageNotFoundAction">
 			<result name="success">/index.jsp</result>
@@ -104,36 +64,5 @@
 	</package>
 
 	
-	<package name="default" extends="struts-default" namespace="/tests">
 
-		<result-types>
-			<result-type name="tiles"
-				class="org.apache.struts2.views.tiles.TilesResult" />
-		</result-types>
-
-		<default-interceptor-ref name="defaultStack" />
-
-		<action name="transcript" class="transcriptAction">
-			<result name="success">/WEB-INF/jsp/brightcove/transcript.jsp</result>
-		</action>
-
-		<action name="siteHeader" class="indexAction">
-			<result name="success" type="tiles">siteHeader</result>
-		</action>
-
-		<action name="siteFooter" class="indexAction">
-			<result name="success" type="tiles">siteFooter</result>
-		</action>
-
-		<action name="bc-integration-test" class="indexAction">
-			<result name="success" type="tiles">bc-integration-test</result>
-		</action>		
-
-		<action name="navigationTest" class="indexAction">
-			<result name="success" type="tiles">navigationTest</result>
-		</action>
-
-
-		
-	</package>
 </struts>

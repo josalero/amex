@@ -93,7 +93,7 @@
 
 	<servlet-mapping>
 		<servlet-name>JCRContentRepoExplorer</servlet-name>
-		<url-pattern>/default</url-pattern>
+		<url-pattern>/default/*</url-pattern>
 	</servlet-mapping>
 
 

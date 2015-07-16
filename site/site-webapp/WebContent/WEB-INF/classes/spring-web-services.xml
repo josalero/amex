@@ -24,10 +24,6 @@
 				<property name="contentLoader" ref="contentLoader" />
 			</bean>
 
-			<bean class="com.bac.oee.webservice.NavigationDataService">
-				<property name="contentManager" ref="contentManager" />
-			</bean>
-
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>

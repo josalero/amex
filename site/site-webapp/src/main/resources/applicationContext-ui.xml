@@ -23,14 +23,17 @@
 		<property name="searchSystemEnvironment" value="true" /> 
 	</bean>
 		
+	<jee:jndi-lookup id="amex.jackrabbit.repository.path" jndi-name="amex.jackrabbit.repository.path" />	
+	<jee:jndi-lookup id="open.deploy.receiver.directory.path" jndi-name="open.deploy.receiver.directory.path" />	
+
+	<import resource="classpath:/applicationContext-core.xml" />
+		
 	<bean id="contentManager" class="com.amex.srt.content.ContentManager" init-method="init">
 		<property name="contentRepoAccessDao" ref="contentRepoAccessDao" />
 		<property name="contentItemUnmarshaller" ref="contentItemUnmarshaller"/>
 	</bean>	
 	
-	<jee:jndi-lookup id="amex.jackrabbit.repository.path" jndi-name="amex.jackrabbit.repository.path" />		
 
-	<import resource="classpath:/applicationContext.xml" />
 
 	<!-- Struts 2 Action Bean Definitions -->
 	<bean id="abstractBaseAction" abstract="true" class="com.amex.srt.struts.action.AbstractBaseAction"/>	

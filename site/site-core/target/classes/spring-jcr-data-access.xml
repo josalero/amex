@@ -17,7 +17,7 @@
 		<!-- 
 		<property name="homeDir" value="file:./target/repo" />
 		 -->
-		<property name="homeDir" ref="oee.jackrabbit.repository.path" />
+		<property name="homeDir" ref="amex.jackrabbit.repository.path" />
 	</bean>
 
 	<bean id="sessionFactory" class="org.springmodules.jcr.JcrSessionFactory">

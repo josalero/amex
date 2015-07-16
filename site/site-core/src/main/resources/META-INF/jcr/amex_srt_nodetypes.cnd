@@ -13,3 +13,6 @@
 [amex:Page] > amex:ContentItem
   - amex:URL (string)
 
+[amex:Question] > amex:ContentItem
+  - amex:Score (string)
+  - amex:Keywords (string[]) 

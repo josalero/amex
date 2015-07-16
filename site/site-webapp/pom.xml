@@ -104,10 +104,9 @@
 
 		<dependency>
 			<groupId>com.amex.srt</groupId>
-			<artifactId>site-service</artifactId>
+			<artifactId>site-content</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.springframework</groupId>

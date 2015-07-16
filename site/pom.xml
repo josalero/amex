@@ -52,7 +52,7 @@
 	
 		<module>site-content</module>
 		<module>site-core</module>
-		<module>site-service</module>
+		<!-- module>site-service</module-->
 		<module>site-webapp</module>
 		<!-- module>site-common-webservice</module-->
 		
@@ -77,6 +77,21 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>repository-master.mulesoft.org</id>
+			<url>https://repository-master.mulesoft.org/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>		
+		<repository>
+			<id>fornax-platform.org</id>
+			<url>https://www.fornax-platform.org/nexus/content/repositories/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>		
+		
 	</repositories>
 
 	<build>

@@ -23,44 +23,32 @@
 		<property name="searchSystemEnvironment" value="true" /> 
 	</bean>
 		
-	<bean id="contentManager" class="com.bac.oee.content.ContentManager" init-method="init">
+	<jee:jndi-lookup id="amex.jackrabbit.repository.path" jndi-name="amex.jackrabbit.repository.path" />	
+	<jee:jndi-lookup id="open.deploy.receiver.directory.path" jndi-name="open.deploy.receiver.directory.path" />	
+
+	<import resource="classpath:/applicationContext-core.xml" />
+		
+	<bean id="contentManager" class="com.amex.srt.content.ContentManager" init-method="init">
 		<property name="contentRepoAccessDao" ref="contentRepoAccessDao" />
 		<property name="contentItemUnmarshaller" ref="contentItemUnmarshaller"/>
-		<property name="navigationUnmarshaller" ref="navigationUnmarshaller"/>
-		<property name="tagContainerUnmarshaller" ref="tagContainerUnmarshaller"/>
 	</bean>	
 	
-	<jee:jndi-lookup id="oee.jackrabbit.repository.path" jndi-name="oee.jackrabbit.repository.path" />		
 
-	<jee:jndi-lookup id="google.analytics.site.id" jndi-name="google.analytics.site.id" />		
-
-	<import resource="classpath:/applicationContext.xml" />
-
-	<import resource="classpath:/spring-web-services.xml" />
 
 	<!-- Struts 2 Action Bean Definitions -->
-	<bean id="abstractBaseAction" abstract="true" class="com.bac.oee.struts.action.AbstractBaseAction"/>	
-	<bean id="indexAction" parent="abstractBaseAction" class="com.bac.oee.struts.action.IndexAction" />
-	<bean id="pageAction" parent="abstractBaseAction" class="com.bac.oee.struts.action.PageAction" />
-	<bean id="redirectAction" class="com.bac.oee.struts.action.RedirectAction" />
-	<bean id="pageNotFoundAction" parent="abstractBaseAction" class="com.bac.oee.struts.action.PageNotFoundAction" />
-	<bean id="serverErrorAction" parent="abstractBaseAction" class="com.bac.oee.struts.action.ServerErrorAction" />
-	<bean id="transcriptAction" class="com.bac.oee.struts.action.TranscriptAction" />
-	<bean id="filterAction" class="com.bac.oee.struts.action.FilterAction" parent="abstractBaseAction" >
-	</bean>
+	<bean id="abstractBaseAction" abstract="true" class="com.amex.srt.struts.action.AbstractBaseAction"/>	
+	<bean id="pageAction" parent="abstractBaseAction" class="com.amex.srt.struts.action.PageAction" />
+	<bean id="pageNotFoundAction" parent="abstractBaseAction" class="com.amex.srt.struts.action.PageNotFoundAction" />
+	<bean id="serverErrorAction" parent="abstractBaseAction" class="com.amex.srt.struts.action.ServerErrorAction" />
 		
-  <util:map id="levelsMap">
-        <entry key="index" value-ref="indexLevel"/>
-    </util:map>
-	
 	
 	<!-- Struts 2 Action Bean Definitions -->
  
-	<!--bean id="loadCMSContentTask" class="com.bac.oee.webservice.jobs.LoadCMSContentTask"/>
+	<!--bean id="loadCMSContentTask" class="com.amex.srt.webservice.jobs.LoadCMSContentTask"/>
 	
 	<bean id="loadCMSContentJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 
-		<property name="jobClass" value="com.bac.oee.webservice.jobs.LoadCMSContentQuartzJob" />
+		<property name="jobClass" value="com.amex.srt.webservice.jobs.LoadCMSContentQuartzJob" />
 
 		<property name="jobDataAsMap">
 			<map>
